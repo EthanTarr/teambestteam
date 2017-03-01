@@ -2,26 +2,51 @@
 library(dplyr)
 library(xlsx)
 library(tidyr)
-# how should we represent clinical service versus maternal residence
-# we can use this data overall amounts in state that got abortions, subset showing by state who went to different state
-# show traces, one indicating amount in state receivign clinical service in state, other trace showing receiving
-# service out of state
 
-# For each sheet, add a new column to data frame that is the sum of row (state of clinical service)
-# col 60 is total by location of service, row 54 total by residence
-natl_abortion09 <-  read.xlsx('data/abortions-by-state.xls', sheetName = '2009')
-View(natl_abortion09)
+# Total abortions by state of service 2009 - 2013
+service09 <- abortionByService('2009')
+service10 <- abortionByService('2010')
+service11 <- abortionByService('2011')
+service12 <- abortionByService('2012')
+service13 <- abortionByService('2013')
 
-abortion_by_service <- natl_abortion09 %>%
-                       select(NA., NA..57) %>%
-                       slice(2:53) %>%
-                       `colnames<-`(c("State", 2009)) 
+abortion_by_service <- service09 %>%
+                       full_join(service10, by='State') %>%
+                       full_join(service11, by='State') %>%
+                       full_join(service12, by='State') %>%
+                       full_join(service13, by='State')
 
-# for each year, go through and add abortion_by_service$2010
-  
-abortion_by_residence <- natl_abortion09 %>%
-                         select(State.of.Maternal.Residence:NA..56) %>%
-                         `colnames<-`(as.character(unlist(abortion_by_residence[1,]))) %>%
-                         slice(54) 
-rownames(abortion_by_residence) <- c(2009)
+# Total abortions by state of residence 2009 - 2013
+residence09 <- abortionByResidence('2009')
+residence10 <- abortionByResidence('2010')
+residence11 <- abortionByResidence('2011')
+residence12 <- abortionByResidence('2012')
+residence13 <- abortionByResidence('2013')
 
+abortion_by_residence <- residence09 %>%
+                         merge(residence10, by=0) %>%
+                         merge(residence11) %>%
+                         merge(residence12) %>%
+                         merge(residence13)
+
+# function to organize dataset by state of service
+abortionByService <- function(year){
+                       df <- read.xlsx('data/abortions-by-state.xls', sheetName = year)
+                       df <- df %>%
+                             select(NA., NA..57) %>%
+                             slice(2:53) %>%
+                             `colnames<-`(c("State", year)) 
+                       return(df)
+                     }
+# function to organize dataset by state of residence
+abortionByResidence <- function(year){
+                         df <- read.xlsx('data/abortions-by-state.xls', sheetName = year) %>%
+                               select(State.of.Maternal.Residence:NA..56) 
+                          
+                         colnames(df) <- as.character(unlist(df[1,]))
+                         df <- slice(df, 54) 
+                          
+                         df <- as.data.frame(t(df)) %>%
+                               `colnames<-`(c(year))
+                         return(df)
+                       }
