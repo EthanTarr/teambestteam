@@ -59,3 +59,15 @@ abortionByResidence <- function(year){
                                `colnames<-`(c('State', year))
                          return(df)
                        }
+
+# World contraceptive use: survey data from 1970 to 2013 
+contraceptive_prevalence <- read.xlsx('data/UNPD_WCU2016_Country_Data_Survey-Based.xlsx', sheetName = 'DATA')
+
+colnames(contraceptive_prevalence) <- c(as.character(unlist(contraceptive_prevalence[3,]))[1:6], 
+                                    as.character(unlist(contraceptive_prevalence[4,]))[7:24])
+# narrow by United States and contraceptive prevalence (by percentage)
+# any method increasing over years until 2006-08, decreasing by ~3% 2011-13, 
+# increased significantly ~10% between 1973 and 1975
+# use of pill increasing until 1975, decrease after 
+contraceptive_prevalence <- contraceptive_prevalence[, 0:24] %>%
+                            slice(1054:1067)
