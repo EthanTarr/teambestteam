@@ -2,6 +2,7 @@
 library(dplyr)
 library(xlsx)
 library(tidyr)
+library(plotly)
 
 # Total abortions by state of service 2009 - 2013
 service09 <- abortionByService('2009')
@@ -38,6 +39,14 @@ abortion_by_residence[33, 6] = abortion_by_residence[58, 6]
 abortion_by_residence <- slice(abortion_by_residence, 1:57)
 abortion_by_residence[abortion_by_residence == '--'] <- NA
 
+p.residence <- plot_ly(abortion_by_residence,
+                       x = ~State,
+                       y = ~abortion_by_residence[[2]],
+                       type = 'scatter',
+                       mode = 'markers',
+                       name = '2009')
+p.residence
+
 # function to organize dataset by state of service
 abortionByService <- function(year){
                        df <- read.xlsx('data/abortions-by-state.xls', sheetName = year)
@@ -49,19 +58,19 @@ abortionByService <- function(year){
                      }
 # function to organize dataset by state of residence
 abortionByResidence <- function(year){
-                         df <- read.xlsx('data/abortions-by-state.xls', sheetName = year) %>%
+                         df <- read.xlsx('Data/abortions-by-state.xls', sheetName = year) %>%
                                select(State.of.Maternal.Residence:NA..56) 
                           
-                         #colnames(df) <- as.character(unlist(df[1,]))
+                         # colnames(df) <- as.character(unlist(df[1,]))
                          df <- slice(df, c(1,54)) 
-                          
+
                          df <- as.data.frame(t(df)) %>%
                                `colnames<-`(c('State', year))
                          return(df)
                        }
 
 # World contraceptive use: survey data from 1970 to 2013 
-contraceptive_prevalence <- read.xlsx('data/UNPD_WCU2016_Country_Data_Survey-Based.xlsx', sheetName = 'DATA')
+contraceptive_prevalence <- read.xlsx('Data/UNPD_WCU2016_Country_Data_Survey-Based.xlsx', sheetName = 'DATA')
 
 colnames(contraceptive_prevalence) <- c(as.character(unlist(contraceptive_prevalence[3,]))[1:6], 
                                     as.character(unlist(contraceptive_prevalence[4,]))[7:24])
