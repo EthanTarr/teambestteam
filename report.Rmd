@@ -1,0 +1,53 @@
+---
+title: "Policy and Reproductive Health"
+subtitle: "How Abortion-related Policies affect Reproductive Health"
+author: "Sabrina Klaus, Nico Malig, Spencer Pease, Ethan Tarr"
+
+date: "March 8, 2017"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    echo = FALSE,
+    warning = FALSE,
+    message = FALSE
+)
+
+```
+
+
+# Abstract
+
+Hi
+
+
+# Introduction
+
+Hi
+
+
+# Related Work
+
+Hi
+
+
+# Methods
+
+Hi
+
+
+# Result
+
+Hi
+
+
+# Discussion
+
+Hi
+
+
+# Future Work
+
+Hi
+
