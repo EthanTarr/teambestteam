@@ -100,13 +100,51 @@ p.residence <- plot_ly(abortion_by_residence,
 # National Outcome Measures from HRSA: Maternal & Child Health
 #                                      https://mchb.tvisdata.hrsa.gov/PrioritiesAndMeasures/NationalOutcomeMeasures
 #                                      https://mchb.tvisdata.hrsa.gov/uploadedfiles/Documents/FADResourceDocument.pdf
-# Maternal mortality: (# deaths related to or aggravated by pregnancy within 42 days of end of pregnancy)/(# live births) 
-# Infant mortality: (# deaths to infants from birth through 364 days)/(# live births)
-# Neonatal mortality: (# deaths to infants under 28 days)/(# live births)
-# Drinking during pregnancy: (# women report drinking alcohol in last 3 mo pregnancy)/(# live biths)
-maternal_mortality <- read.xlsx('Data/HRSA_natl_outcome/maternal_mortality.xlsx', sheetName = 'Sheet1')
-maternal_morbidity <- read.xlsx('Data/HRSA_natl_outcome/maternal_morbidity.xlsx', sheetName = 'Sheet1')
-infant_mortality <- read.xlsx('Data/HRSA_natl_outcome/infant_mortality.xlsx', sheetName = 'Sheet1')
-neonatal_mortality <- read.xlsx('Data/HRSA_natl_outcome/neonatal_mortality.xlsx', sheetName = 'Sheet1')
-drinking_during_pregnancy <- read.xlsx('Data/HRSA_natl_outcome/drinking_during_pregnancy.xlsx', sheetName = 'Sheet1')
 
+# Maternal mortality: (# deaths related to or aggravated by pregnancy within 42 days of end of pregnancy)/(# live births)
+#                     rate per 100,000                      
+# source: National - National Vital Statistics System
+maternal.mortality <- read.xlsx('Data/HRSA_natl_outcome/maternal_mortality.xlsx', sheetName = 'Sheet1')
+
+# Severe maternal morbidity: (# deliveries hospitalizations with an indication of severe morbidity)/(# delivery hospitalizations)
+#                            rate per   
+# source: National - HCUP State Inpatient Database
+maternal.morbidity <- read.xlsx('Data/HRSA_natl_outcome/maternal_morbidity.xlsx', sheetName = 'Sheet1')
+
+# Infant mortality: (# deaths to infants from birth through 364 days)/(# live births)
+#                   rate per 1,000
+# source: National - National Vital Statistics System
+infant.mortality <- read.xlsx('Data/HRSA_natl_outcome/infant_mortality.xlsx', sheetName = 'Sheet1')
+
+# Neonatal mortality: (# deaths to infants under 28 days)/(# live births)
+#                     rate per 1,000
+# source: National - National Vital Statistics System
+neonatal.mortality <- read.xlsx('Data/HRSA_natl_outcome/neonatal_mortality.xlsx', sheetName = 'Sheet1')
+
+# Drinking during pregnancy: (# women report drinking alcohol in last 3 mo pregnancy)/(# live biths)
+#                            percent
+# source: National - Pregnancy Risk Assessment Monitoring System
+drinking.during.pregnancy <- read.xlsx('Data/HRSA_natl_outcome/drinking_during_pregnancy.xlsx', sheetName = 'Sheet1')
+
+maternal_mortality <- maternal.mortality[1:6] %>%
+                      `colnames<-`(c('Outcome', 'X2009', 'X2010', 'X2011', 'X2012', 'X2013')) 
+maternal_mortality$Outcome <- 'Maternal Mortality'
+
+maternal_morbidity <- maternal.morbidity[c(1, 3:7)] %>%
+                      `colnames<-`(c('Outcome', 'X2009', 'X2010', 'X2011', 'X2012', 'X2013')) 
+maternal_morbidity$Outcome <- 'Maternal Morbidity'
+                      
+infant_mortality <- infant.mortality %>%
+                    `colnames<-`(c('Outcome', 'X2009', 'X2010', 'X2011', 'X2012', 'X2013')) 
+infant_mortality$Outcome <- 'Infant Mortality'
+
+neonatal_mortality <- neonatal.mortality %>%
+                      `colnames<-`(c('Outcome', 'X2009', 'X2010', 'X2011', 'X2012', 'X2013')) 
+neonatal_mortality$Outcome <- 'Neonatal Mortality'
+
+drinking_during_pregnancy <- drinking.during.pregnancy[c(1, 4:8)] %>%
+                             `colnames<-`(c('Outcome', 'X2009', 'X2010', 'X2011', 'X2012', 'X2013'))
+drinking_during_pregnancy$Outcome <- 'Drinking During Pregnancy'
+
+natl_outcome_measures <- bind_rows(list(maternal_mortality, maternal_morbidity, infant_mortality, neonatal_mortality, drinking_during_pregnancy))
+                        
