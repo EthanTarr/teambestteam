@@ -6,7 +6,7 @@ library(plotly)
 
 # function to organize dataset by state of service
 abortionByService <- function(year){
-  df <- read.xlsx('data/abortions-by-state.xls', sheetName = year)
+  df <- read.xlsx('Data/abortions-by-state.xls', sheetName = year)
   df <- df %>%
     select(NA., NA..57) %>%
     slice(2:53) %>%
@@ -97,16 +97,16 @@ p.residence <- plot_ly(abortion_by_residence,
 #p.residence
 
 
-# World contraceptive use: survey data from 1970 to 2013 
-contraceptive_prevalence <- read.xlsx('Data/UNPD_WCU2016_Country_Data_Survey-Based.xlsx', sheetName = 'DATA')
-
-colnames(contraceptive_prevalence) <- c(as.character(unlist(contraceptive_prevalence[3,]))[1:6], 
-                                    as.character(unlist(contraceptive_prevalence[4,]))[7:24])
-# narrow by United States and contraceptive prevalence (by percentage)
-# any method increasing over years until 2006-08, decreasing by ~3% 2011-13, 
-# increased significantly ~10% between 1973 and 1975
-# use of pill increasing until 1975, decrease after 
-contraceptive_prevalence <- contraceptive_prevalence[, 0:24] %>%
-                            slice(1054:1067)
-
+# National Outcome Measures from HRSA: Maternal & Child Health
+#                                      https://mchb.tvisdata.hrsa.gov/PrioritiesAndMeasures/NationalOutcomeMeasures
+#                                      https://mchb.tvisdata.hrsa.gov/uploadedfiles/Documents/FADResourceDocument.pdf
+# Maternal mortality: (# deaths related to or aggravated by pregnancy within 42 days of end of pregnancy)/(# live births) 
+# Infant mortality: (# deaths to infants from birth through 364 days)/(# live births)
+# Neonatal mortality: (# deaths to infants under 28 days)/(# live births)
+# Drinking during pregnancy: (# women report drinking alcohol in last 3 mo pregnancy)/(# live biths)
+maternal_mortality <- read.xlsx('Data/HRSA_natl_outcome/maternal_mortality.xlsx', sheetName = 'Sheet1')
+maternal_morbidity <- read.xlsx('Data/HRSA_natl_outcome/maternal_morbidity.xlsx', sheetName = 'Sheet1')
+infant_mortality <- read.xlsx('Data/HRSA_natl_outcome/infant_mortality.xlsx', sheetName = 'Sheet1')
+neonatal_mortality <- read.xlsx('Data/HRSA_natl_outcome/neonatal_mortality.xlsx', sheetName = 'Sheet1')
+drinking_during_pregnancy <- read.xlsx('Data/HRSA_natl_outcome/drinking_during_pregnancy.xlsx', sheetName = 'Sheet1')
 
