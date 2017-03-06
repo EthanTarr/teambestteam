@@ -9,10 +9,35 @@ shinyUI(fluidPage(
                tabPanel('Home'
                        
                ),
-               tabPanel('Info'
+               tabPanel('National Map',
+                        # creating a title for the tab
+                        headerPanel("Change in abortion rates nationally"),
+                        
+                        # Side panel for controls
+                        sidebarPanel(
+                          helpText("Select a County in New York to display the number of Obese and Overweight Students
+                 in the county selected. The colors of the scatter points represent the grade category 
+                                   (including the district total). Hover over a scatter point to discover what school 
+                                   district or area the students are from and the exact number of students overweight and obese 
+                                   in that specific school."),
+                          # creating a divider
+                          hr(),
+                          # creating a drop down to choose the county to display on the plot
+                          selectInput("choice", label = 'choice', choices = c("Resident", "Service"), selected = 'Resident'),
+                          
+                          # Input to select variable to map
+                          sliderInput("year",
+                                      "year",
+                                      min = 2009,
+                                      max = 2013,
+                                      value = 2009)
+                        ),
+                        mainPanel(
+                          leafletOutput('BuildNationalMap')
+                        )
                         
                ),
-               tabPanel('Map',
+               tabPanel('Illinois Map',
                         # creating a title for the tab
                         headerPanel("Change in abortion rates in Illinois"),
                         
