@@ -59,7 +59,7 @@ abortion_by_service[10,1] <- "Florida"
 abortion_by_service[21,1] <- "Maryland"
 abortion_by_service[30,1] <- "New Hampshire"
 
-write.csv(abortion_by_service, "Data/abortion.by.service.csv")
+write.csv(abortion_by_service, "Data/abortion.by.service.csv", row.names = FALSE)
 
 # Total abortions by state of residence 2009 - 2013
 residence09 <- abortionByResidence('2009')
@@ -85,7 +85,7 @@ abortion_by_residence[21,1] <- "Maryland"
 abortion_by_residence[30,1] <- "New Hampshire"
 abortion_by_residence[33,1] <- "New York"
 
-write.csv(abortion_by_residence, "Data/abortion.by.residence.csv")
+write.csv(abortion_by_residence, "Data/abortion.by.residence.csv", row.names = FALSE)
 
 p.residence <- plot_ly(abortion_by_residence,
                        x = ~State,
@@ -142,5 +142,5 @@ perinatal_mortality <- transform(perinatal_mortality, `Perinatal Mortality` = 10
 natl_outcome_measures <- bind_cols(list(maternal_mortality, maternal_morbidity, infant_mortality, perinatal_mortality)) %>%
                          mutate(year = c(2009:2013))
 
-write.csv(natl_outcome_measures, file = 'Data/natl.outcome.measures.csv')
+write.csv(natl_outcome_measures, file = 'Data/natl.outcome.measures.csv', row.names = FALSE)
 
