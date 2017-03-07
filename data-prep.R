@@ -10,16 +10,16 @@ abortionByService <- function(year){
   df <- df %>%
     select(NA., NA..57) %>%
     slice(2:53) %>%
-    `colnames<-`(c("State", year)) 
+    `colnames<-`(c("State", year))
   return(df)
 }
 # function to organize dataset by state of residence
 abortionByResidence <- function(year){
   df <- read.xlsx('Data/abortions-by-state.xls', sheetName = year) %>%
-    select(State.of.Maternal.Residence:NA..56) 
-  
-  df <- slice(df, c(1,54)) 
-  
+    select(State.of.Maternal.Residence:NA..56)
+
+  df <- slice(df, c(1,54))
+
   df <- as.data.frame(t(df)) %>%
     `colnames<-`(c('State', year))
   return(df)
@@ -101,12 +101,12 @@ p.residence <- plot_ly(abortion_by_residence,
 #                                      https://mchb.tvisdata.hrsa.gov/uploadedfiles/Documents/FADResourceDocument.pdf
 
 # Maternal mortality: (# deaths related to or aggravated by pregnancy within 42 days of end of pregnancy)/(# live births)
-#                     rate per 100,000                      
+#                     rate per 100,000
 # source: National - National Vital Statistics System
 maternal.mortality <- read.xlsx('Data/HRSA_natl_outcome/maternal_mortality.xlsx', sheetName = 'Sheet1', stringsAsFactors = FALSE)
 
 # Severe maternal morbidity: (# deliveries hospitalizations with an indication of severe morbidity)/(# delivery hospitalizations)
-#                            rate per 10,000  
+#                            rate per 10,000
 # source: National - HCUP State Inpatient Database
 maternal.morbidity <- read.xlsx('Data/HRSA_natl_outcome/maternal_morbidity.xlsx', sheetName = 'Sheet1', stringsAsFactors = FALSE)
 
@@ -133,8 +133,8 @@ maternal_mortality <- as.data.frame(t(maternal.mortality[1:6])) %>%
 maternal_mortality <- transform(maternal_mortality, `Maternal Mortality` = as.numeric(as.character(`Maternal Mortality`))/10)
 
 maternal_morbidity <- as.data.frame(t(maternal.morbidity[c(1, 3:7)])) %>%
-                      slice(2:6) %>% 
-                      `row.names<-`(c('2009', '2010', '2011', '2012', '2013')) %>% 
+                      slice(2:6) %>%
+                      `row.names<-`(c('2009', '2010', '2011', '2012', '2013')) %>%
                       `colnames<-`(c('Maternal Morbidity'))
 
 infant_mortality <- as.data.frame(t(infant.mortality)) %>%
@@ -160,6 +160,8 @@ drinking_during_pregnancy <- as.data.frame(t(drinking.during.pregnancy[c(1, 4:8)
 
 # All in units rate per 10,000
 # keep drinking_during_pregnancy out - not closely related
-natl_outcome_measures <- bind_cols(list(maternal_mortality, maternal_morbidity, infant_mortality, 
+natl_outcome_measures <- bind_cols(list(maternal_mortality, maternal_morbidity, infant_mortality,
                                         neonatal_mortality))
-                        
+
+write.csv(natl_outcome_measures, file = 'Data/natl.outcome.measures.csv')
+
