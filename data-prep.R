@@ -161,7 +161,8 @@ drinking_during_pregnancy <- as.data.frame(t(drinking.during.pregnancy[c(1, 4:8)
 # All in units rate per 10,000
 # keep drinking_during_pregnancy out - not closely related
 natl_outcome_measures <- bind_cols(list(maternal_mortality, maternal_morbidity, infant_mortality,
-                                        neonatal_mortality))
+                                        neonatal_mortality)) %>%
+    mutate(year = c(2009:2013))
 
 write.csv(natl_outcome_measures, file = 'Data/natl.outcome.measures.csv')
 
