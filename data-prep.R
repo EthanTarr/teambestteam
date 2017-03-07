@@ -6,21 +6,20 @@ library(plotly)
 
 # function to organize dataset by state of service
 abortionByService <- function(year){
-  df <- read.xlsx('data/abortions-by-state.xls', sheetName = year)
+  df <- read.xlsx('Data/abortions-by-state.xls', sheetName = year)
   df <- df %>%
     select(NA., NA..57) %>%
     slice(2:53) %>%
-    `colnames<-`(c("State", year)) 
+    `colnames<-`(c("State", year))
   return(df)
 }
 # function to organize dataset by state of residence
 abortionByResidence <- function(year){
   df <- read.xlsx('Data/abortions-by-state.xls', sheetName = year) %>%
-    select(State.of.Maternal.Residence:NA..56) 
-  
-  # colnames(df) <- as.character(unlist(df[1,]))
-  df <- slice(df, c(1,54)) 
-  
+    select(State.of.Maternal.Residence:NA..56)
+
+  df <- slice(df, c(1,54))
+
   df <- as.data.frame(t(df)) %>%
     `colnames<-`(c('State', year))
   return(df)
@@ -60,7 +59,7 @@ abortion_by_service[10,1] <- "Florida"
 abortion_by_service[21,1] <- "Maryland"
 abortion_by_service[30,1] <- "New Hampshire"
 
-write.csv(abortion_by_service, "Data/abortion.by.service.csv")
+write.csv(abortion_by_service, "Data/abortion.by.service.csv", row.names = FALSE)
 
 # Total abortions by state of residence 2009 - 2013
 residence09 <- abortionByResidence('2009')
@@ -86,7 +85,7 @@ abortion_by_residence[21,1] <- "Maryland"
 abortion_by_residence[30,1] <- "New Hampshire"
 abortion_by_residence[33,1] <- "New York"
 
-write.csv(abortion_by_residence, "Data/abortion.by.residence.csv")
+write.csv(abortion_by_residence, "Data/abortion.by.residence.csv", row.names = FALSE)
 
 p.residence <- plot_ly(abortion_by_residence,
                        x = ~State,
@@ -97,16 +96,51 @@ p.residence <- plot_ly(abortion_by_residence,
 #p.residence
 
 
-# World contraceptive use: survey data from 1970 to 2013 
-contraceptive_prevalence <- read.xlsx('Data/UNPD_WCU2016_Country_Data_Survey-Based.xlsx', sheetName = 'DATA')
+# National Outcome Measures from HRSA: Maternal & Child Health
+#                                      https://mchb.tvisdata.hrsa.gov/PrioritiesAndMeasures/NationalOutcomeMeasures
+#                                      https://mchb.tvisdata.hrsa.gov/uploadedfiles/Documents/FADResourceDocument.pdf
 
-colnames(contraceptive_prevalence) <- c(as.character(unlist(contraceptive_prevalence[3,]))[1:6], 
-                                    as.character(unlist(contraceptive_prevalence[4,]))[7:24])
-# narrow by United States and contraceptive prevalence (by percentage)
-# any method increasing over years until 2006-08, decreasing by ~3% 2011-13, 
-# increased significantly ~10% between 1973 and 1975
-# use of pill increasing until 1975, decrease after 
-contraceptive_prevalence <- contraceptive_prevalence[, 0:24] %>%
-                            slice(1054:1067)
+# (# deaths related to or aggravated by pregnancy within 42 days of end of pregnancy)/(# live births) - rate per 100,000
+maternal.mortality <- read.xlsx('Data/HRSA_natl_outcome/maternal_mortality.xlsx', sheetName = 'Sheet1', stringsAsFactors = FALSE)
 
+# (# deliveries hospitalizations with an indication of severe morbidity)/(# delivery hospitalizations) - rate per 10,000
+maternal.morbidity <- read.xlsx('Data/HRSA_natl_outcome/maternal_morbidity.xlsx', sheetName = 'Sheet1', stringsAsFactors = FALSE)
+
+# (# deaths to infants from birth through 364 days)/(# live births) rate per 1,000
+infant.mortality <- read.xlsx('Data/HRSA_natl_outcome/infant_mortality.xlsx', sheetName = 'Sheet1', stringsAsFactors = FALSE)
+
+# (# fetal deaths 28 weeks+ gestation + early neonatal deaths occuring <7 days) / (# live births + fetal deaths) - rate per 1,000
+perinatal.mortality <- read.xlsx('Data/HRSA_natl_outcome/perinatal_mortality.xlsx', sheetName = 'Sheet1', stringsAsFactors = FALSE)
+
+maternal_mortality <- as.data.frame(t(maternal.mortality[1:6])) %>%
+                      slice(2:6) %>%
+                      `row.names<-`(c('2009', '2010', '2011', '2012', '2013')) %>%
+                      `colnames<-`(c('Maternal Mortality'))
+# change from rate per 100,000 to rate per 10,000 - divide by 10
+maternal_mortality <- transform(maternal_mortality, `Maternal Mortality` = as.numeric(as.character(`Maternal Mortality`))/10)
+
+maternal_morbidity <- as.data.frame(t(maternal.morbidity[c(1, 3:7)])) %>%
+                      slice(2:6) %>%
+                      `row.names<-`(c('2009', '2010', '2011', '2012', '2013')) %>%
+                      `colnames<-`(c('Maternal Morbidity'))
+
+infant_mortality <- as.data.frame(t(infant.mortality)) %>%
+                    slice(2:6) %>%
+                    `row.names<-`(c('2009', '2010', '2011', '2012', '2013'))  %>%
+                    `colnames<-`(c('Infant Mortality'))
+# change from rate per 1,000 to rate per 10,000 - multiply by 10
+infant_mortality <- transform(infant_mortality, `Infant Mortality` = 10 * as.numeric(as.character(`Infant Mortality`)))
+
+perinatal_mortality <- as.data.frame(t(perinatal.mortality)) %>%
+                      slice(2:6) %>%
+                      `row.names<-`(c('2009', '2010', '2011', '2012', '2013')) %>%
+                      `colnames<-`(c('Perinatal Mortality'))
+# change from rate per 1,000 to rate per 10,000 - multiply by 10
+perinatal_mortality <- transform(perinatal_mortality, `Perinatal Mortality` = 10 * as.numeric(as.character(`Perinatal Mortality`)))
+
+# All in units rate per 10,000
+natl_outcome_measures <- bind_cols(list(maternal_mortality, maternal_morbidity, infant_mortality, perinatal_mortality)) %>%
+                         mutate(year = c(2009:2013))
+
+write.csv(natl_outcome_measures, file = 'Data/natl.outcome.measures.csv', row.names = FALSE)
 
