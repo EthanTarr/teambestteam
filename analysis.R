@@ -117,3 +117,17 @@ g.ab.srv.summary <- ggplot(data = ab.srv.long,
          x = 'Year',
          y = 'Number')
 
+
+## Covariate graphs ##
+
+plot(residence.totals$value, natl.outcome.measures$Maternal.Mortality)
+
+
+############################
+### Statistical analysis ###
+############################
+
+## Basic correlation tests ##
+
+cor.test(residence.totals$value, natl.outcome.measures$Maternal.Mortality)
+
