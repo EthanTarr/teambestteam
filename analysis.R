@@ -29,12 +29,17 @@ natl.outcome.measures <- read_csv('Data/natl.outcome.measures.csv') %>%
 residence.totals <- colSums(abortions.by.residence[, -1], na.rm = T) %>%
     as_tibble() %>%
     rownames_to_column(var = 'Year') %>%
-    mutate(Year = make_date(Year))
+    mutate(Year = make_date(Year),
+           summation = 'State of Residence')
 
 service.totals <- colSums(abortions.by.service[, -1], na.rm = T) %>%
     as_tibble() %>%
     rownames_to_column(var = 'Year') %>%
-    mutate(Year = make_date(Year))
+    mutate(Year = make_date(Year),
+           summation = 'State of Service')
+
+all.totals <- bind_rows(residence.totals, service.totals) %>%
+    arrange(Year)
 
 
 ## Summary plots ##
@@ -55,6 +60,22 @@ g.natl.summary <- ggplot(data = natl.long,
          y = 'Rate (per 10,000 people)')
 
 # g.natl.summary
+
+
+# Abortion totals over time
+g.ab.tot.summary <- ggplot(data = all.totals,
+                           aes(x = Year,
+                               y = value,
+                               color = summation,
+                               group = summation)) +
+    geom_line(size = 1) +
+    geom_point(size = 2) +
+    labs(title = 'Number of Abortions over Time',
+         subtitle = 'Total abortions; grouped by summation method',
+         x = 'Year',
+         y = 'Number')
+
+# g.ab.tot.summary
 
 
 # Abortions by state of residence over time
@@ -93,10 +114,4 @@ g.ab.srv.summary <- ggplot(data = ab.srv.long,
          y = 'Number')
 
 # g.ab.srv.summary
-
-
-## Basic correlation tests ##
-
-# cor.test(residence.totals$value, natl.outcome.measures$Maternal.Mortality)
-# plot(residence.totals$value, natl.outcome.measures$Maternal.Mortality)
 
