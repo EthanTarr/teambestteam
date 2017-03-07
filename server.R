@@ -12,4 +12,7 @@ shinyServer(function(input, output) {
   output$BuildNationalMap <- renderLeaflet({
     return(national.map(input$year, input$choice))
   })
+  output$BuildNationalChart <- renderPlotly({
+    return(national.plot())
+  })
 })
