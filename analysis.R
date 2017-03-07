@@ -54,5 +54,49 @@ g.natl.summary <- ggplot(data = natl.long,
          x = 'Year',
          y = 'Rate (per 10,000 people)')
 
-g.natl.summary
+# g.natl.summary
+
+
+# Abortions by state of residence over time
+ab.res.long <- abortions.by.residence %>%
+    gather('Year', 'value', -1)
+
+g.ab.res.summary <- ggplot(data = ab.res.long,
+                           aes(x = Year,
+                               y = log(value),
+                               color = State,
+                               group = State)) +
+    geom_line(size = 1) +
+    geom_point(size = 2) +
+    labs(title = 'Number of Abortions over Time',
+         subtitle = 'For state of residence; grouped by state',
+         x = 'Year',
+         y = 'Number')
+
+# g.ab.res.summary
+
+
+# Abortions by state of service over time
+ab.srv.long <- abortions.by.service %>%
+    gather('Year', 'value', -1)
+
+g.ab.srv.summary <- ggplot(data = ab.srv.long,
+                           aes(x = Year,
+                               y = value,
+                               color = State,
+                               group = State)) +
+    geom_line(size = 1) +
+    geom_point(size = 2) +
+    labs(title = 'Number of Abortions over Time',
+         subtitle = 'For state of service; grouped by state',
+         x = 'Year',
+         y = 'Number')
+
+# g.ab.srv.summary
+
+
+## Basic correlation tests ##
+
+# cor.test(residence.totals$value, natl.outcome.measures$Maternal.Mortality)
+# plot(residence.totals$value, natl.outcome.measures$Maternal.Mortality)
 
