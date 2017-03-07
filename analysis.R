@@ -6,6 +6,7 @@ library(readr)
 library(tidyr)
 library(lubridate)
 library(tibble)
+library(ggplot2)
 library(dplyr)
 
 
@@ -34,3 +35,24 @@ service.totals <- colSums(abortions.by.service[, -1], na.rm = T) %>%
     as_tibble() %>%
     rownames_to_column(var = 'Year') %>%
     mutate(Year = make_date(Year))
+
+
+## Summary plots ##
+
+# NATL data over time
+natl.long <- natl.outcome.measures %>%
+    gather('Metric', 'Rate', 2:5)
+
+g.natl.summary <- ggplot(data = natl.long,
+                         aes(x = Year,
+                             y = Rate,
+                             color = Metric,
+                             group = Metric)) +
+    geom_line(size = 1) +
+    geom_point(size = 2) +
+    labs(title = 'NATL Outcome Metrics over Time',
+         x = 'Year',
+         y = 'Rate (per 10,000 people)')
+
+g.natl.summary
+
