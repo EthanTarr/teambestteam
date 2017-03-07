@@ -100,30 +100,17 @@ p.residence <- plot_ly(abortion_by_residence,
 #                                      https://mchb.tvisdata.hrsa.gov/PrioritiesAndMeasures/NationalOutcomeMeasures
 #                                      https://mchb.tvisdata.hrsa.gov/uploadedfiles/Documents/FADResourceDocument.pdf
 
-# Maternal mortality: (# deaths related to or aggravated by pregnancy within 42 days of end of pregnancy)/(# live births)
-#                     rate per 100,000
-# source: National - National Vital Statistics System
+# (# deaths related to or aggravated by pregnancy within 42 days of end of pregnancy)/(# live births) - rate per 100,000
 maternal.mortality <- read.xlsx('Data/HRSA_natl_outcome/maternal_mortality.xlsx', sheetName = 'Sheet1', stringsAsFactors = FALSE)
 
-# Severe maternal morbidity: (# deliveries hospitalizations with an indication of severe morbidity)/(# delivery hospitalizations)
-#                            rate per 10,000
-# source: National - HCUP State Inpatient Database
+# (# deliveries hospitalizations with an indication of severe morbidity)/(# delivery hospitalizations) - rate per 10,000
 maternal.morbidity <- read.xlsx('Data/HRSA_natl_outcome/maternal_morbidity.xlsx', sheetName = 'Sheet1', stringsAsFactors = FALSE)
 
-# Infant mortality: (# deaths to infants from birth through 364 days)/(# live births)
-#                   rate per 1,000
-# source: National - National Vital Statistics System
+# (# deaths to infants from birth through 364 days)/(# live births) rate per 1,000
 infant.mortality <- read.xlsx('Data/HRSA_natl_outcome/infant_mortality.xlsx', sheetName = 'Sheet1', stringsAsFactors = FALSE)
 
-# Neonatal mortality: (# deaths to infants under 28 days)/(# live births)
-#                     rate per 1,000
-# source: National - National Vital Statistics System
-neonatal.mortality <- read.xlsx('Data/HRSA_natl_outcome/neonatal_mortality.xlsx', sheetName = 'Sheet1', stringsAsFactors = FALSE)
-
-# Drinking during pregnancy: (# women report drinking alcohol in last 3 mo pregnancy)/(# live biths)
-#                            percent
-# source: National - Pregnancy Risk Assessment Monitoring System
-drinking.during.pregnancy <- read.xlsx('Data/HRSA_natl_outcome/drinking_during_pregnancy.xlsx', sheetName = 'Sheet1', stringsAsFactors = FALSE)
+# (# fetal deaths 28 weeks+ gestation + early neonatal deaths occuring <7 days) / (# live births + fetal deaths) - rate per 1,000
+perinatal.mortality <- read.xlsx('Data/HRSA_natl_outcome/perinatal_mortality.xlsx', sheetName = 'Sheet1', stringsAsFactors = FALSE)
 
 maternal_mortality <- as.data.frame(t(maternal.mortality[1:6])) %>%
                       slice(2:6) %>%
@@ -144,25 +131,16 @@ infant_mortality <- as.data.frame(t(infant.mortality)) %>%
 # change from rate per 1,000 to rate per 10,000 - multiply by 10
 infant_mortality <- transform(infant_mortality, `Infant Mortality` = 10 * as.numeric(as.character(`Infant Mortality`)))
 
-neonatal_mortality <- as.data.frame(t(neonatal.mortality)) %>%
+perinatal_mortality <- as.data.frame(t(perinatal.mortality)) %>%
                       slice(2:6) %>%
                       `row.names<-`(c('2009', '2010', '2011', '2012', '2013')) %>%
-                      `colnames<-`(c('Neonatal Mortality'))
+                      `colnames<-`(c('Perinatal Mortality'))
 # change from rate per 1,000 to rate per 10,000 - multiply by 10
-neonatal_mortality <- transform(neonatal_mortality, `Neonatal Mortality` = 10 * as.numeric(as.character(`Neonatal Mortality`)))
-
-drinking_during_pregnancy <- as.data.frame(t(drinking.during.pregnancy[c(1, 4:8)])) %>%
-                             slice(2:6) %>%
-                             `row.names<-`(c('2009', '2010', '2011', '2012', '2013')) %>%
-                             `colnames<-`(c('Drinking During Pregnancy'))
-# change from percent to rate per 10,000 - should this be done?
-# drinking_during_pregnancy <- transform(drinking_during_pregnancy, `Drinking During Pregnancy` = 10000 * as.numeric(as.character(`Drinking During Pregnancy`)))
+perinatal_mortality <- transform(perinatal_mortality, `Perinatal Mortality` = 10 * as.numeric(as.character(`Perinatal Mortality`)))
 
 # All in units rate per 10,000
-# keep drinking_during_pregnancy out - not closely related
-natl_outcome_measures <- bind_cols(list(maternal_mortality, maternal_morbidity, infant_mortality,
-                                        neonatal_mortality)) %>%
-    mutate(year = c(2009:2013))
+natl_outcome_measures <- bind_cols(list(maternal_mortality, maternal_morbidity, infant_mortality, perinatal_mortality)) %>%
+                         mutate(year = c(2009:2013))
 
 write.csv(natl_outcome_measures, file = 'Data/natl.outcome.measures.csv')
 
