@@ -9,8 +9,6 @@ library(rgdal)
 
 #Read in data from csv in Data folder
 abortions.data <- read.csv("Data/Abortions_By_County__1995-2012.csv", stringsAsFactors = FALSE)
-live.births.data <- read.csv("Data/All_Live_Births_In_Illinois__1989-2009.csv", stringsAsFactors = FALSE)
-teen.mothers.data <- read.csv("Data/IDPH_Births_to_Teen_Mothers__by_County__2009.csv", stringsAsFactors = FALSE)
 
 
 #modify data to fit for a map
@@ -23,10 +21,6 @@ abortions.data <- spread(abortions.data, YEAR, FREQUENCY)
 
 abortions.data$COUNTY <- toupper(abortions.data$COUNTY)
 
-
-live.births.data <- live.births.data[-c(1,18,19), ]
-
-teen.mothers.data <- teen.mothers.data[-c(17,18), ]
 
 #----------------------------
 
@@ -148,3 +142,18 @@ national.map <- function(year, choice) {
 }
 
 # ---------------------------------------------------------------
+
+national.plot <- function() {
+
+natl.outcome <- read.csv("Data/natl.outcome.measures.csv")
+
+national.plot <- plot_ly(natl.outcome, x = ~year, y = ~Perinatal.Mortality, name = 'Perinatal Mortality', type = 'scatter', mode = 'lines',
+             line = list(color = 'rgb(205, 12, 24)', width = 4)) %>%
+  add_trace(y = ~Infant.Mortality, name = 'Infant Mortality', line = list(color = 'rgb(205, 12, 24)', width = 4, dash = 'dash')) %>%
+  add_trace(y = ~Maternal.Morbidity, name = 'Maternal Morbidity', line = list(color = 'rgb(22, 96, 167)', width = 4)) %>%
+  add_trace(y = ~Maternal.Mortality, name = 'Maternal Mortality', line = list(color = 'rgb(22, 96, 167)', width = 4, dash = 'dash')) %>%
+  layout(title = "National Outcomes",
+         xaxis = list(title = "Years"),
+         yaxis = list (title = "Values"))
+return(national.plot)
+}
