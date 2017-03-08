@@ -15,4 +15,7 @@ shinyServer(function(input, output) {
   output$BuildNationalChart <- renderPlotly({
     return(national.plot())
   })
+  output$BuildNationalOutcomes <- renderPlotly({
+    return(national.total())
+  })
 })
