@@ -3,7 +3,7 @@ library(leaflet)
 library(plotly)
 
 shinyUI(fluidPage(
-  titlePanel("Policy Effects on Abortion Rates"),
+  titlePanel("Abortion Services and Policy"),
   # Create sidebar layout
   sidebarLayout(
     navbarPage('',
@@ -16,23 +16,25 @@ shinyUI(fluidPage(
                         
                         # Side panel for controls
                         sidebarPanel(
-                          helpText("Select whether the abortions are calcuated by resident or by service."),
+                          helpText("Select to see abortion rates by state of maternal residence, or by state of service"),
                           # creating a divider
                           hr(),
                           # creating a drop down to choose the county to display on the plot
-                          selectInput("Choice", label = 'choice', choices = c("Residence", "Service"), selected = 'Resident'),
+                          selectInput("Choice", label = 'Qualifier', choices = c("Residence", "Service"), selected = 'Resident'),
                           
                           # Input to select variable to map
                           sliderInput("Nationalyear1",
                                       "Nationalyear1",
                                       min = 2009,
                                       max = 2013,
-                                      value = 2009),
+                                      value = 2009,
+                                      sep = ""),
                           sliderInput("Nationalyear2",
                                       "Nationalyear2",
                                       min = 2009,
                                       max = 2013,
-                                      value = 2013)
+                                      value = 2013,
+                                      sep = "")
                         ),
                         mainPanel(
                           leafletOutput('BuildNationalMap'),
@@ -53,20 +55,22 @@ shinyUI(fluidPage(
                                       "year1",
                                       min = 1995,
                                       max = 2012,
-                                      value = 1995),
+                                      value = 1995,
+                                      sep = ""),
                           sliderInput("year2",
                                       "year2",
                                       min = 1995,
                                       max = 2012,
-                                      value = 2012)
+                                      value = 2012,
+                                      sep = "")
                         ),
                         mainPanel(
                           leafletOutput('BuildMap')
                         )
                ),
-               tabPanel('National Aggregate',
+               tabPanel('National Outcome Measures',
                         # creating a title for the tab
-                        headerPanel("National Data"),
+                        headerPanel("National Outcome Measures "),
                         
                         mainPanel(
                           plotlyOutput("BuildNationalChart")

@@ -80,7 +80,7 @@ BuildMap <- function(year1, year2) {
     ) %>% 
     addLegend("bottomright", pal = pal, values = ~value,
               title = paste0("Change between ", year1, " and ", year2),
-              labFormat = labelFormat(suffix = "abortions"),
+              labFormat = labelFormat(suffix = " reported cases"),
               opacity = 1
     )
   return(map)
@@ -123,13 +123,13 @@ national.map <- function(year1, year2, choice) {
     data <- national.combined.map.resident.data
     #create map popups
     county_popup <- paste0(data$NAME, " with a change in abortion rate of",
-                           "<br> ", round(value, 1), " per 100k capita from ", year1, " to ", year2)
-    suf <- " per 100k capita"
+                           "<br> ", round(value, 1), " per 100k from ", year1, " to ", year2)
+    suf <- " per 100k"
   } else {
     data <- national.combined.map.service.data
     #create map popups
     county_popup <- paste0(data$NAME, " with a ", round(value, 3),"% change",
-                           "<br> in proborational abortion rate from ", year1, " to ", year2)
+                           "<br> in proportional abortion rate from ", year1, " to ", year2)
     suf <- "% change"
   }
   
@@ -183,9 +183,9 @@ national.total <- function() {
   plots <- plot_ly(total.abortions, x = ~Year, y = ~Residence.Values, name = 'Residence Total', type = 'scatter', mode = 'lines',
                            line = list(color = 'rgb(205, 12, 24)', width = 4)) %>%
     add_trace(y = ~Service.Values, name = 'Service Total', line = list(color = 'rgb(22, 96, 167)', width = 4)) %>%
-    layout(title = "National Outcomes",
+    layout(title = "National Rates of Abortion",
            xaxis = list(title = "Years"),
-           yaxis = list (title = "Number of Abortions Nationally"))
+           yaxis = list (title = "Number of Reported Abortions"))
   return(plots)
 }
 
@@ -202,7 +202,7 @@ national.plot <- plot_ly(natl.outcome, x = ~year, y = ~Perinatal.Mortality, name
   add_trace(y = ~Infant.Mortality, name = 'Infant Mortality', line = list(color = 'rgb(205, 12, 24)', width = 4, dash = 'dash')) %>%
   add_trace(y = ~Maternal.Morbidity, name = 'Maternal Morbidity', line = list(color = 'rgb(22, 96, 167)', width = 4)) %>%
   add_trace(y = ~Maternal.Mortality, name = 'Maternal Mortality', line = list(color = 'rgb(22, 96, 167)', width = 4, dash = 'dash')) %>%
-  layout(title = "National Outcomes",
+  layout(
          xaxis = list(title = "Years"),
          yaxis = list (title = "People (per 10,000)"))
 return(national.plot)
