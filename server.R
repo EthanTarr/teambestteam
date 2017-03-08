@@ -2,7 +2,6 @@ library(shiny)
 
 # sourcing in the data
 source('IllinoisMap.R')
-#source("data-prep.R")
 
 # using shiny server to build the app with the output of the map and input of the mapping values
 shinyServer(function(input, output) {

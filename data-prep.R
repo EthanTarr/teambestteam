@@ -59,14 +59,16 @@ abortion_by_service[10,1] <- "Florida"
 abortion_by_service[21,1] <- "Maryland"
 abortion_by_service[30,1] <- "New Hampshire"
 
+write.csv(abortion_by_service, "Data/total.abortion.by.service.csv", row.names = FALSE)
+
 abortion_by_service[is.na(abortion_by_service)] <- 0
 
 # Normalize data by dividing by total abortions in that year
-abortion_by_service$`2009` <- abortion_by_service$`2009` / sum(abortion_by_service$`2009`)
-abortion_by_service$`2010` <- abortion_by_service$`2010` / sum(abortion_by_service$`2010`)
-abortion_by_service$`2011` <- abortion_by_service$`2011` / sum(abortion_by_service$`2011`)
-abortion_by_service$`2012` <- abortion_by_service$`2012` / sum(abortion_by_service$`2012`)
-abortion_by_service$`2013` <- abortion_by_service$`2013` / sum(abortion_by_service$`2013`)
+abortion_by_service$`2009` <- (abortion_by_service$`2009` / sum(abortion_by_service$`2009`) * 100000 )
+abortion_by_service$`2010` <- (abortion_by_service$`2010` / sum(abortion_by_service$`2010`) * 100000 )
+abortion_by_service$`2011` <- (abortion_by_service$`2011` / sum(abortion_by_service$`2011`) * 100000 )
+abortion_by_service$`2012` <- (abortion_by_service$`2012` / sum(abortion_by_service$`2012`) * 100000 )
+abortion_by_service$`2013` <- (abortion_by_service$`2013` / sum(abortion_by_service$`2013`) * 100000 )
 
 abortion_by_service[abortion_by_service == 0] <- NA
 
@@ -96,6 +98,8 @@ abortion_by_residence[21,1] <- "Maryland"
 abortion_by_residence[30,1] <- "New Hampshire"
 abortion_by_residence[33,1] <- "New York"
 
+write.csv(abortion_by_residence, "Data/total.abortion.by.residence.csv", row.names = FALSE)
+
 abortion_by_residence$`2009` <- as.numeric(as.character(abortion_by_residence$`2009`))
 abortion_by_residence$`2010` <- as.numeric(as.character(abortion_by_residence$`2010`))
 abortion_by_residence$`2011` <- as.numeric(as.character(abortion_by_residence$`2011`))
@@ -110,11 +114,11 @@ population.estimates <- population_estimates[c(1, 4:8)] %>%
  
 population.estimates$State <- as.vector(abortion_by_residence$State)
 
-abortion_by_residence$`2009` <- abortion_by_residence$`2009` / as.numeric(as.character(population.estimates$`2009`))
-abortion_by_residence$`2010` <- abortion_by_residence$`2010` / as.numeric(as.character(population.estimates$`2010`))
-abortion_by_residence$`2011` <- abortion_by_residence$`2011` / as.numeric(as.character(population.estimates$`2011`))
-abortion_by_residence$`2012` <- abortion_by_residence$`2012` / as.numeric(as.character(population.estimates$`2012`))
-abortion_by_residence$`2013` <- abortion_by_residence$`2013` / as.numeric(as.character(population.estimates$`2013`))
+abortion_by_residence$`2009` <- (abortion_by_residence$`2009` / as.numeric(as.character(population.estimates$`2009`)) * 100000 )
+abortion_by_residence$`2010` <- (abortion_by_residence$`2010` / as.numeric(as.character(population.estimates$`2010`)) * 100000 )
+abortion_by_residence$`2011` <- (abortion_by_residence$`2011` / as.numeric(as.character(population.estimates$`2011`)) * 100000 )
+abortion_by_residence$`2012` <- (abortion_by_residence$`2012` / as.numeric(as.character(population.estimates$`2012`)) * 100000 )
+abortion_by_residence$`2013` <- (abortion_by_residence$`2013` / as.numeric(as.character(population.estimates$`2013`)) * 100000 )
 
 write.csv(abortion_by_residence, "Data/abortion.by.residence.csv", row.names = FALSE)
 
