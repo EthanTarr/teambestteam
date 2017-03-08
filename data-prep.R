@@ -1,3 +1,4 @@
+
 # setup
 library(dplyr)
 library(xlsx)
@@ -178,4 +179,5 @@ natl_outcome_measures <- bind_cols(list(maternal_mortality, maternal_morbidity, 
                          mutate(year = c(2009:2013))
 
 write.csv(natl_outcome_measures, file = 'Data/natl.outcome.measures.csv', row.names = FALSE)
+
 
