@@ -121,6 +121,8 @@ As a comparison to our four-state "National Level" data, Illinois looks to be **
 
 **National Outcome Measures**
 
+![outcome metrics](facet_graph.png)
+
 On a national level, we see that as the overall abortion rate has decreased, outcomes of maternal mortality and morbidity show an increasing trend. The rates of infant mortality and perinatal mortality show a trend of consistent rates. As our we have discovered in our analysis, increasing restrictions placed on abortion as well as movements to defund planned parenthood have ultimately decreased rates of abortion cases on a national level. Seeing this negative correlation between rates of abortion and maternal mortality provides incentive to further investigate the effects of service availability and contraceptive education on maternal health.
 
 #### Discussion and Future Work
