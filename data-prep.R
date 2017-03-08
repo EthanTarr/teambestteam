@@ -15,7 +15,7 @@ abortionByService <- function(year){
 }
 # function to organize dataset by state of residence
 abortionByResidence <- function(year){
-  df <- read.xlsx('Data/abortions-by-state.xls', sheetName = year) %>%
+  df <- read.xlsx('Data/abortions-by-state.xls', sheetName = year, stringsAsFactors = FALSE) %>%
     select(State.of.Maternal.Residence:NA..56)
 
   df <- slice(df, c(1,54))
@@ -59,6 +59,17 @@ abortion_by_service[10,1] <- "Florida"
 abortion_by_service[21,1] <- "Maryland"
 abortion_by_service[30,1] <- "New Hampshire"
 
+abortion_by_service[is.na(abortion_by_service)] <- 0
+
+# Normalize data by dividing by total abortions in that year
+abortion_by_service$`2009` <- abortion_by_service$`2009` / sum(abortion_by_service$`2009`)
+abortion_by_service$`2010` <- abortion_by_service$`2010` / sum(abortion_by_service$`2010`)
+abortion_by_service$`2011` <- abortion_by_service$`2011` / sum(abortion_by_service$`2011`)
+abortion_by_service$`2012` <- abortion_by_service$`2012` / sum(abortion_by_service$`2012`)
+abortion_by_service$`2013` <- abortion_by_service$`2013` / sum(abortion_by_service$`2013`)
+
+abortion_by_service[abortion_by_service == 0] <- NA
+
 write.csv(abortion_by_service, "Data/abortion.by.service.csv", row.names = FALSE)
 
 # Total abortions by state of residence 2009 - 2013
@@ -84,6 +95,26 @@ abortion_by_residence[10,1] <- "Florida"
 abortion_by_residence[21,1] <- "Maryland"
 abortion_by_residence[30,1] <- "New Hampshire"
 abortion_by_residence[33,1] <- "New York"
+
+abortion_by_residence$`2009` <- as.numeric(as.character(abortion_by_residence$`2009`))
+abortion_by_residence$`2010` <- as.numeric(as.character(abortion_by_residence$`2010`))
+abortion_by_residence$`2011` <- as.numeric(as.character(abortion_by_residence$`2011`))
+abortion_by_residence$`2012` <- as.numeric(as.character(abortion_by_residence$`2012`))
+abortion_by_residence$`2013` <- as.numeric(as.character(abortion_by_residence$`2013`))
+
+# Use census population estimates to calculate abortion rate proportions relative to state population
+population_estimates <- read.xlsx('Data/pop_2009-2016.xlsx', sheetName = 'NST01')
+population.estimates <- population_estimates[c(1, 4:8)] %>%
+                        `colnames<-`(c('State', '2009', '2010', '2011', '2012', '2013')) %>%
+                        slice(9:59) 
+ 
+population.estimates$State <- as.vector(abortion_by_residence$State)
+
+abortion_by_residence$`2009` <- abortion_by_residence$`2009` / as.numeric(as.character(population.estimates$`2009`))
+abortion_by_residence$`2010` <- abortion_by_residence$`2010` / as.numeric(as.character(population.estimates$`2010`))
+abortion_by_residence$`2011` <- abortion_by_residence$`2011` / as.numeric(as.character(population.estimates$`2011`))
+abortion_by_residence$`2012` <- abortion_by_residence$`2012` / as.numeric(as.character(population.estimates$`2012`))
+abortion_by_residence$`2013` <- abortion_by_residence$`2013` / as.numeric(as.character(population.estimates$`2013`))
 
 write.csv(abortion_by_residence, "Data/abortion.by.residence.csv", row.names = FALSE)
 
