@@ -1,7 +1,7 @@
 library(shiny)
 
 # sourcing in the data
-source('IllinoisMap.R')
+source('visualizations.R')
 
 # using shiny server to build the app with the output of the map and input of the mapping values
 shinyServer(function(input, output) {
