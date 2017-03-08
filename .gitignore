@@ -35,3 +35,9 @@ vignettes/*.pdf
 # R project file
 *.Rproj
 .Rproj.user
+
+.RData
+
+.Rhistory
+
+.Rhistory
