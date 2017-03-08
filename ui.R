@@ -7,8 +7,11 @@ shinyUI(fluidPage(
   # Create sidebar layout
   sidebarLayout(
     navbarPage('',
-               tabPanel('Home'
-                       
+               tabPanel('Home',
+                        headerPanel('Overview'),
+                        mainPanel(
+                          includeMarkdown('final_report/v1/abstract.md')
+                        )
                ),
                tabPanel('National Map',
                         # creating a title for the tab
@@ -75,6 +78,11 @@ shinyUI(fluidPage(
                         mainPanel(
                           plotlyOutput("BuildNationalChart")
                         )
+               ),
+               tabPanel('Report',
+                        mainPanel(
+                          includeMarkdown('final_report/v1/writeup.md')
+                        )
                )
     ),
     
@@ -84,3 +92,5 @@ shinyUI(fluidPage(
     )
   )
 ))
+
+
