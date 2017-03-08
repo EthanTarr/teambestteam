@@ -3,7 +3,7 @@ library(leaflet)
 library(plotly)
 
 shinyUI(fluidPage(
-  titlePanel("Policy effects on abortion rates"),
+  titlePanel("Policy Effects on Abortion Rates"),
   # Create sidebar layout
   sidebarLayout(
     navbarPage('',
@@ -12,7 +12,7 @@ shinyUI(fluidPage(
                ),
                tabPanel('National Map',
                         # creating a title for the tab
-                        headerPanel("Change in abortion rates nationally"),
+                        headerPanel("Change in Abortion Rates Nationally"),
                         
                         # Side panel for controls
                         sidebarPanel(
@@ -35,13 +35,15 @@ shinyUI(fluidPage(
                                       value = 2013)
                         ),
                         mainPanel(
-                          leafletOutput('BuildNationalMap')
+                          leafletOutput('BuildNationalMap'),
+                          hr(),
+                          plotlyOutput("BuildNationalOutcomes")
                         )
                         
                ),
                tabPanel('Illinois Map',
                         # creating a title for the tab
-                        headerPanel("Change in abortion rates in Illinois"),
+                        headerPanel("Change in Abortion Rates in Illinois"),
                         
                         # Side panel for controls
                         sidebarPanel(
@@ -62,9 +64,9 @@ shinyUI(fluidPage(
                           leafletOutput('BuildMap')
                         )
                ),
-               tabPanel('National aggregate',
+               tabPanel('National Aggregate',
                         # creating a title for the tab
-                        headerPanel("Change in abortion rates in Illinois"),
+                        headerPanel("National Data"),
                         
                         mainPanel(
                           plotlyOutput("BuildNationalChart")
