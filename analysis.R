@@ -11,8 +11,8 @@ library(dplyr)
 
 
 # Read in data
-abortions.by.residence <- read_csv('Data/abortion.by.residence.csv')
-abortions.by.service <- read_csv('Data/abortion.by.service.csv')
+abortions.by.residence <- read_csv('Data/total.abortion.by.residence.csv')
+abortions.by.service <- read_csv('Data/total.abortion.by.service.csv')
 natl.outcome.measures <- read_csv('Data/natl.outcome.measures.csv') %>%
     select(year,
            (1:4)) %>%
@@ -62,7 +62,8 @@ ab.srv.long <- abortions.by.service %>%
 facet.data <- all.totals %>%
     spread(summation, value) %>%
     left_join(natl.outcome.measures, by = 'Year') %>%
-    gather('Metric', 'Rate', -(1:3))
+    gather('Metric', 'Rate', -(1:3)) %>%
+    gather('Qualifier', "Number", 2:3)
 
 
 #####################
@@ -130,20 +131,19 @@ g.ab.srv.summary <- ggplot(data = ab.srv.long,
 
 # Facet graph of all natl outcomes with abortion rates
 g.facet <- ggplot(data = facet.data,
-                  aes(y = Rate)) +
+                  aes(x = Number,
+                      y = Rate,
+                      color = Qualifier,
+                      group = Qualifier)) +
     facet_wrap(~ Metric,
                scales = 'free',
                ncol = 2) +
-    geom_point(aes(x = `State of Residence`),
-               size = 2,
-               color = 'red') +
-    geom_point(aes(x = `State of Service`),
-               size = 2,
-               color = 'blue')
-
-g.facet
-
-plot(residence.totals$value, natl.outcome.measures$Maternal.Mortality)
+    geom_point(size = 2) +
+    geom_smooth(method = 'lm') +
+    labs(title = 'HRSA Outcome Rates vs Number of Abortions',
+         subtitle = 'Seperated by summation method and HRSA metric',
+         x = 'Number of Abortions',
+         y = 'Rate (per 10,000 people)')
 
 
 ############################
@@ -152,5 +152,4 @@ plot(residence.totals$value, natl.outcome.measures$Maternal.Mortality)
 
 ## Basic correlation tests ##
 
-cor.test(residence.totals$value, natl.outcome.measures$Maternal.Mortality)
 
