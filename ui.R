@@ -3,10 +3,10 @@ library(leaflet)
 library(plotly)
 
 shinyUI(fluidPage(
-  titlePanel("Title"),
+  titlePanel("Policy effects on abortion rates"),
   # Create sidebar layout
   sidebarLayout(
-    navbarPage('Policy effects on abortion rates',
+    navbarPage('',
                tabPanel('Home'
                        
                ),
@@ -20,14 +20,19 @@ shinyUI(fluidPage(
                           # creating a divider
                           hr(),
                           # creating a drop down to choose the county to display on the plot
-                          selectInput("choice", label = 'choice', choices = c("Resident", "Service"), selected = 'Resident'),
+                          selectInput("Choice", label = 'choice', choices = c("Residence", "Service"), selected = 'Resident'),
                           
                           # Input to select variable to map
-                          sliderInput("year",
-                                      "year",
+                          sliderInput("Nationalyear1",
+                                      "Nationalyear1",
                                       min = 2009,
                                       max = 2013,
-                                      value = 2009)
+                                      value = 2009),
+                          sliderInput("Nationalyear2",
+                                      "Nationalyear2",
+                                      min = 2009,
+                                      max = 2013,
+                                      value = 2013)
                         ),
                         mainPanel(
                           leafletOutput('BuildNationalMap')

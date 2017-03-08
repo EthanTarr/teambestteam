@@ -93,11 +93,11 @@ national.combined.map.resident.data <- merge(national.map.data, abortion_by_resi
 
 national.combined.map.service.data <- merge(national.map.data, abortion_by_service, by.x = "NAME", by.y = "State")
 
-Resident.2009 <- national.combined.map.resident.data$X2009
-Resident.2010 <- national.combined.map.resident.data$X2010
-Resident.2011 <- national.combined.map.resident.data$X2011
-Resident.2012 <- national.combined.map.resident.data$X2012
-Resident.2013 <- national.combined.map.resident.data$X2013
+Residence.2009 <- national.combined.map.resident.data$X2009
+Residence.2010 <- national.combined.map.resident.data$X2010
+Residence.2011 <- national.combined.map.resident.data$X2011
+Residence.2012 <- national.combined.map.resident.data$X2012
+Residence.2013 <- national.combined.map.resident.data$X2013
 
 Service.2009 <- national.combined.map.service.data$X2009
 Service.2010 <- national.combined.map.service.data$X2010
@@ -105,20 +105,20 @@ Service.2011 <- national.combined.map.service.data$X2011
 Service.2012 <- national.combined.map.service.data$X2012
 Service.2013 <- national.combined.map.service.data$X2013
 
-national.map <- function(year, choice) {
+national.map <- function(year1, year2, choice) {
 
-  value <- eval(parse(text = paste0(choice, ".", year)))
+  value <- eval(parse(text = paste0(choice, ".", year2))) - eval(parse(text = paste0(choice, ".", year1)))
   
-  if(choice == "Resident") {
+  if(choice == "Residence") {
     data <- national.combined.map.resident.data
   } else {
     data <- national.combined.map.service.data
   }
   
   #create map popups
-  county_popup <- paste0(data$NAME, " with an",
+  county_popup <- paste0(data$NAME, " with a change in",
                          "<br>abortion rate of ", 
-                         value, " in ", year)
+                         value, " from ", year1, " to ", year2)
   
   #create color palette
   pal <- colorNumeric(
@@ -134,7 +134,7 @@ national.map <- function(year, choice) {
       weight = 1, fillColor = ~pal(value), popup = county_popup
     ) %>% 
     addLegend("bottomright", pal = pal, values = ~value,
-              title = paste0("Rate in ", year),
+              title = paste0("Rate from ", year1, " to ", year2),
               labFormat = labelFormat(suffix = " abortions"),
               opacity = 1
     )
