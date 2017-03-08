@@ -57,6 +57,14 @@ ab.srv.long <- abortions.by.service %>%
     gather('Year', 'value', -1)
 
 
+## Group all data by time ##
+
+facet.data <- all.totals %>%
+    spread(summation, value) %>%
+    left_join(natl.outcome.measures, by = 'Year') %>%
+    gather('Metric', 'Rate', -(1:3))
+
+
 #####################
 ### Create graphs ###
 #####################
@@ -119,6 +127,21 @@ g.ab.srv.summary <- ggplot(data = ab.srv.long,
 
 
 ## Covariate graphs ##
+
+# Facet graph of all natl outcomes with abortion rates
+g.facet <- ggplot(data = facet.data,
+                  aes(y = Rate)) +
+    facet_wrap(~ Metric,
+               scales = 'free',
+               ncol = 2) +
+    geom_point(aes(x = `State of Residence`),
+               size = 2,
+               color = 'red') +
+    geom_point(aes(x = `State of Service`),
+               size = 2,
+               color = 'blue')
+
+g.facet
 
 plot(residence.totals$value, natl.outcome.measures$Maternal.Mortality)
 
